@@ -76,7 +76,7 @@ class LoginForm extends React.Component{
                         <Col xs={1} md={3}/>
                     </Row>
                 </Grid>
-                <Modal show={this.state.show} onHide={this.handleClose.bind(this)} bzSize="small" >
+                <Modal show={this.state.show} onHide={this.handleClose.bind(this)} bsSize="small" >
                     <Modal.Header closeButton/>
                     <Modal.Body>
                         <h4 className="text-center">用户或密码不能为空</h4>
