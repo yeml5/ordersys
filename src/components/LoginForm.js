@@ -2,21 +2,42 @@
  * Created by yeml5 on 2018/4/4.
  */
 import React from 'react'
-import {Form,FormGroup,FormControl,Button,Col,Grid,Row,PageHeader,Checkbox} from 'react-bootstrap'
+import {Form,FormGroup,FormControl,Button,Col,Grid,Row,PageHeader,Checkbox,Modal} from 'react-bootstrap'
 
 class LoginForm extends React.Component{
     constructor(props){
         super(props);
-        this.state={userName:null,passWord:null,rememberme:false}
+        this.state={userName:'',passWord:'',rememberme:false,show:false}
     }
     componentWillMount(){
         /**
-         rememberme-cookie-remain
+         记住账号 cookie预留
          **/
     }
     handleClick(){
         this.setState({rememberme:!this.state.rememberme})
     }
+    handleSubmit(event){
+        event.preventDefault();
+        if (this.state.userName === '' || this.state.passWord === ''){
+            this.setState({show:true});}
+        else{
+            /**发送请求**/
+            }
+    }
+
+    handleClose(event){
+        this.setState({show:false})
+    }
+
+    changeUserName(event){
+        this.setState({userName:event.target.value})
+    }
+
+    changePassWord(event){
+        this.setState({passWord:event.target.value})
+    }
+
     render() {
         return (
             <div className="text-center">
@@ -24,19 +45,22 @@ class LoginForm extends React.Component{
                     <Row>
                         <Col xs={1} md={3}/>
                         <Col xs={10} md={6}>
-                            <Form horizontal>
+                            <Form horizontal onSubmit={this.handleSubmit.bind(this)}>
                                 <PageHeader>B2I订单后台管理</PageHeader>
                                 <FormGroup controlId="formHorizontalOA">
-                                    <FormControl type="text" defaultValue={this.state.userName} placeholder="员工OA"/>
+                                    <FormControl type="text" defaultValue={this.state.userName} placeholder="员工OA"
+                                                 onChange={this.changeUserName.bind(this)}/>
                                 </FormGroup>
                                 <FormGroup controlId="formHorizontalPassword">
-                                    <FormControl type="password" defaultValue={this.state.userName} placeholder="密 码"/>
+                                    <FormControl type="password" defaultValue={this.state.passWord} placeholder="密 码"
+                                                 onChange={this.changePassWord.bind(this)}/>
                                 </FormGroup>
                                 <FormGroup>
                                     <Row>
                                         <Col md={3} xs={3}/>
                                         <Col md={3} mdPull={3} xs={3} xsPull={3}>
-                                        <Checkbox checked={this.state.rememberme} onClick={null}>记住账号(未完)</Checkbox>
+                                            <Checkbox checked={this.state.rememberme}
+                                                      onClick={null}>记住账号(未完)</Checkbox>
                                         </Col>
                                         <Col md={3} mdPush={3} xs={3} xsPush={3}>
                                             <a>联系管理员</a>
@@ -52,29 +76,13 @@ class LoginForm extends React.Component{
                         <Col xs={1} md={3}/>
                     </Row>
                 </Grid>
+                <Modal show={this.state.show} onHide={this.handleClose.bind(this)} bzSize="small" >
+                    <Modal.Header closeButton/>
+                    <Modal.Body>
+                        <h4 className="text-center">用户或密码不能为空</h4>
+                    </Modal.Body>
+                </Modal>
             </div>)
     }
 }
 export default LoginForm;
-
-/** md12等分列调整 **/
-
-/** <div className="container">
-            <div className="row">
-                <div className="col-md-offset-3 col-md-6" style="margin-top: 10rem">
-                    <form className="form-horizontal" >
-                        <span className="heading">B2I订单后台管理</span>
-                        <div className="form-group">
-                            <input type="text" className="form-control" id="staff_oa" placeholder="员工OA"/>
-                        </div>
-                        <div className="form-group">
-                            <input type="password" className="form-control" id="oa_pw" placeholder="密　码"/>
-                        </div>
-                        <div style="margin-left: 5rem">
-                            <button  type="submit"  className="btn btn-default" onclick="smt()">登录</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        **/
