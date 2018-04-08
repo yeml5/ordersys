@@ -3,6 +3,10 @@
  */
 import React from 'react'
 import {Form,FormGroup,FormControl,Button,Col,Grid,Row,PageHeader,Checkbox,Modal} from 'react-bootstrap'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+
+import * as action1 from '../actions/Auth'
 
 class LoginForm extends React.Component{
     constructor(props){
@@ -22,7 +26,6 @@ class LoginForm extends React.Component{
         if (this.state.userName === '' || this.state.passWord === ''){
             this.setState({show:true});}
         else{
-            /**发送请求**/
             }
     }
 
@@ -85,4 +88,15 @@ class LoginForm extends React.Component{
             </div>)
     }
 }
-export default LoginForm;
+function mapStateToProps(state){
+    return {isAuthenticating:state.Auth.isAuthenticating}
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch,
+        actions:bindActionCreators(action1,dispatch)
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(LoginForm);

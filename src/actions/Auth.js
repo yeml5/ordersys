@@ -1,7 +1,10 @@
 /**
  * Created by yeml5 on 2018/4/4.
  */
-import {LOGIN_USER_REQUEST,LOGIN_USER_SUCCESS,LOGIN_USER_FAILURE} from "./ActionConfig"
+import {LOGIN_USER_REQUEST,
+    LOGIN_USER_SUCCESS,
+    LOGIN_USER_FAILURE,
+LOGIN_OA_REQUEST} from "./ActionConfig"
 import fetch from 'isomorphic-fetch'
 import {push} from 'react-router-redux'
 
@@ -15,22 +18,38 @@ export function LoginUserSuccess(token,user){
     }
 }
 
-export function LoginUser() {
+export function LoginUserFailure() {
+    return {type:LOGIN_USER_FAILURE}
+}
+
+export function LoginOaRequest() {
+    return{type:LOGIN_OA_REQUEST}
+}
+
+export function LoginUser(data) {
     return (dispatch)=>{
         dispatch(LoginUserRequest());
-    return fetch("http://gz.gd.unicom.local/open/oauth2/auth/",{
-        method:'post',
-        header:{},
-        data:{'response_type': 'code',
-            'client_id': 'yeml5_b2iordersys',
-            'redirect_uri': 'http://10.117.227.124:3000/',
-            'state': '', 'scope': scope
-        }})
+    return fetch("http://127.0.0.1:8000/b2i/b2i_oa_check", {
+        method: 'post',
+        data: data
+    })
         .then((response)=>{
-            dispatch(LoginUserSuccess(response.token,response.user));
-            dispatch(push("/b2i_ordersys/index"))
+            dispatch(LoginUserSuccess(data,data.staff_oa));
+            dispatch(push("/b2i_ordersys/index"));
         })
         .catch((error)=>{
+            dispatch(LoginUserFailure())
         })
     }
 }
+
+export function oaRedirect(url) {
+    return (dispatch)=>{
+        dispatch(LoginOaRequest());
+        return fetch(url,{mode:'no-cors'})
+            .then((res) => {
+            window.location.href=url})
+            .catch((error)=>{})
+    }
+}
+
